@@ -21,8 +21,22 @@ describe('news api test suite', () => {
       .get('/api/topics')
       .expect(200)
       .then((response) => {
-        // console.log(response.body);
+        const expectedTopics = [
+            {
+              description: 'The man, the Mitch, the legend',
+              slug: 'mitch'
+            },
+            {
+              description: 'Not dogs',
+              slug: 'cats'
+            },
+            {
+              description: 'what books are made of',
+              slug: 'paper'
+            }
+          ]
         expect(response.body.topics.length).toBe(3);
+        expect(response.body.topics).toMatchObject(expectedTopics);
         response.body.topics.forEach(topic => {
             expect(typeof topic.slug).toBe('string');
             expect(typeof topic.description).toBe('string');
