@@ -3,8 +3,6 @@
 ## Local Deployment
 
 To run this project locally one has to create environment variables as below;
-* Create **.env.test** file.
-* Create **.env.development** file.
-* In each of these files add **PGDATABASE=<database_name_here>** 
-    * Check out **/db/setup.sql** file for database names.
+* Create **.env.test** file and add **PGDATABASE=nc_news_test** in it. 
+* Create **.env.development** file and add **PGDATABASE=nc_news** in it. 
 * Now run **npm install**.
