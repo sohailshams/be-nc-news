@@ -1,13 +1,13 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const { fetchTopics } = require('./controllers/topics.controllers');
+const { fetchTopics } = require("./controllers/topics.controllers");
+const { fetchApiInfo } = require("./controllers/endpoints.controllers");
 
-app.get('/api', (request, response) => response.send({msg: 'all ok'}));
-app.get('/api/topics', fetchTopics);
+app.get("/api", fetchApiInfo);
+app.get("/api/topics", fetchTopics);
 
-app.use('/*', (request, response) => {
-   response.status(404).send({msg: 'Endpoint not found!'})
-  });
-  
-  
+app.use("/*", (request, response) => {
+  response.status(404).send({ msg: "Endpoint not found!" });
+});
+
 module.exports = app;
