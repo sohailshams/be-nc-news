@@ -37,13 +37,47 @@ describe("news api test suite", () => {
   });
 });
 
+describe("GET /api/articles/:article_id test suite", () => {
+  test("returns an article object", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then((response) => {
+        expect(typeof response.body.article.article_id).toBe("number");
+        expect(typeof response.body.article.title).toBe("string");
+        expect(typeof response.body.article.author).toBe("string");
+        expect(typeof response.body.article.body).toBe("string");
+        expect(typeof response.body.article.topic).toBe("string");
+        expect(typeof response.body.article.created_at).toBe("string");
+        expect(typeof response.body.article.votes).toBe("number");
+        expect(typeof response.body.article.article_img_url).toBe("string");
+      });
+  });
+});
+
 describe("news api error handling test suite", () => {
   test("status:404, responds with an error message when passed an endpoint that does not exist", () => {
     return request(app)
       .get("/api/notaroute")
       .expect(404)
       .then((response) => {
-        expect(response.body.msg).toEqual("Endpoint not found!");
+        expect(response.body.msg).toBe("Endpoint not found!");
+      });
+  });
+  test("GET /api/articles/:article_id - status:400, responds with an error message when passed wrong article_id", () => {
+    return request(app)
+      .get("/api/articles/notAnId")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad Request");
+      });
+  });
+  test("GET /api/articles/:article_id - status:404, responds with an error message if article_id does not exist", () => {
+    return request(app)
+      .get("/api/articles/55555")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Article ID does not exist!");
       });
   });
 });
