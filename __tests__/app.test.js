@@ -68,6 +68,47 @@ describe("GET /api/articles/:article_id test suite", () => {
   });
 });
 
+describe("GET /api/articles - news api test suite", () => {
+  test("GET - status: 200 - an array of article objects", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles.length).toBe(12);
+        response.body.articles.forEach((article) => {
+          expect(typeof article.article_id).toBe("number");
+          expect(typeof article.title).toBe("string");
+          expect(typeof article.author).toBe("string");
+          expect(typeof article.comment_count).toBe("number");
+          expect(typeof article.topic).toBe("string");
+          expect(typeof article.created_at).toBe("string");
+          expect(typeof article.votes).toBe("number");
+          expect(typeof article.article_img_url).toBe("string");
+        });
+      });
+  });
+  test("GET - status: 200 - an array of article objects sorted by date in descending order by default", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles).toBeSortedBy("created_at", {
+          descending: true,
+        });
+      });
+  });
+  test("GET - status: 200 - does not return 'body' property on article object", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        response.body.articles.forEach((article) => {
+          expect(article.hasOwnProperty("body")).toBe(false);
+        });
+      });
+  });
+});
+
 describe("news api error handling test suite", () => {
   test("status:404, responds with an error message when passed an endpoint that does not exist", () => {
     return request(app)
