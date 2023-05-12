@@ -57,7 +57,7 @@ exports.addComment = (articleID, newComment) => {
     return username && body in newComment;
   }, true);
 
-  if (!isProps || Object.keys(newComment).length > 2) {
+  if (!isProps) {
     return Promise.reject({
       status: 400,
       msg: "Please pass correct comment object!",

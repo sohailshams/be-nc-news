@@ -153,6 +153,22 @@ describe(" POST /api/articles/:article_id/comments test suite", () => {
         expect(response.body.comment.author).toBe("butter_bridge");
       });
   });
+  test("POST status: 201, returns the newly created comment if passed extra key", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "This is awesome articale!",
+      extra: "extra",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(201)
+      .then((response) => {
+        expect(response.body.comment.hasOwnProperty("extra")).toBe(false);
+        expect(response.body.comment.body).toBe("This is awesome articale!");
+        expect(response.body.comment.author).toBe("butter_bridge");
+      });
+  });
 });
 
 describe("news api error handling test suite", () => {
@@ -206,23 +222,9 @@ describe("news api error handling test suite", () => {
         expect(response.body.msg).toBe("Endpoint not found!");
       });
   });
-  test("GET /api/articles/1/comments - status:400, responds with an error message if comment is missing required field", () => {
+  test("POST /api/articles/1/comments - status:400, responds with an error message if comment is missing required field", () => {
     const newComment = {
       username: "butter_bridge",
-    };
-    return request(app)
-      .post("/api/articles/1/comments")
-      .send(newComment)
-      .expect(400)
-      .then((response) => {
-        expect(response.body.msg).toBe("Please pass correct comment object!");
-      });
-  });
-  test("GET /api/articles/1/comments - status:400, responds with an error message if comment shape is incorrect", () => {
-    const newComment = {
-      username: "butter_bridge",
-      body: "This is awesome articale!",
-      extra: "extra",
     };
     return request(app)
       .post("/api/articles/1/comments")
