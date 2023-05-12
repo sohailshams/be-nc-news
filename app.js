@@ -2,13 +2,18 @@ const express = require("express");
 const app = express();
 const { fetchTopics } = require("./controllers/topics.controllers");
 const { fetchApiInfo } = require("./controllers/endpoints.controllers");
-const { fetchArticleWithId, fetchArticles } = require("./controllers/articles.controllers");
+const {
+  fetchArticleWithId,
+  fetchArticles,
+  fetchCommentsWidArticleId,
+} = require("./controllers/articles.controllers");
 
 app.get("/api", fetchApiInfo);
 app.get("/api/topics", fetchTopics);
 app.get("/api/articles", fetchArticles);
 
 app.get("/api/articles/:article_id", fetchArticleWithId);
+app.get("/api/articles/:article_id/comments", fetchCommentsWidArticleId);
 
 app.use("/*", (request, response) => {
   response.status(404).send({ msg: "Endpoint not found!" });
