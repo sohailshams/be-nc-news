@@ -8,6 +8,7 @@ const {
   fetchArticles,
   fetchCommentsWidArticleId,
   postComment,
+  updateArticle,
 } = require("./controllers/articles.controllers");
 
 app.get("/api", fetchApiInfo);
@@ -18,6 +19,8 @@ app.get("/api/articles/:article_id", fetchArticleWithId);
 app.get("/api/articles/:article_id/comments", fetchCommentsWidArticleId);
 
 app.post("/api/articles/:article_id/comments", postComment);
+
+app.patch("/api/articles/:article_id", updateArticle);
 
 app.use("/*", (request, response) => {
   response.status(404).send({ msg: "Endpoint not found!" });

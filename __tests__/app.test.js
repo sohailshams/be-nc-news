@@ -109,6 +109,29 @@ describe("GET /api/articles - news api test suite", () => {
   });
 });
 
+describe("PATCH /api/articles/:article_id - news api test suite", () => {
+  test("PATCH - status: 200, returns updated article - votes incremented", () => {
+    const updateVoteBy = { inc_vote: 20 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(updateVoteBy)
+      .expect(200)
+      .then((response) => {
+        expect(response.body.updatedArticle.votes).toBe(120);
+      });
+  });
+  test("PATCH - status: 200, returns updated article - votes decremented", () => {
+    const updateVoteBy = { inc_vote: -20 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(updateVoteBy)
+      .expect(200)
+      .then((response) => {
+        expect(response.body.updatedArticle.votes).toBe(80);
+      });
+  });
+});
+
 describe("GET /api/articles/:article_id/comments test suite", () => {
   test("GET - status: 200 - an array of comment objects with correct article_id", () => {
     return request(app)
@@ -232,6 +255,18 @@ describe("news api error handling test suite", () => {
       .expect(400)
       .then((response) => {
         expect(response.body.msg).toBe("Please pass correct comment object!");
+      });
+  });
+  test("PATCH /api/articles/1 - status:400, responds with an error message if newVote object is missing required field", () => {
+    const updateVoteBy = {};
+    return request(app)
+      .patch("/api/articles/1")
+      .send(updateVoteBy)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe(
+          "Please pass correct object to update votes property!"
+        );
       });
   });
 });

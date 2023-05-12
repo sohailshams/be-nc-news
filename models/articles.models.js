@@ -75,3 +75,24 @@ exports.addComment = (articleID, newComment) => {
       return comment;
     });
 };
+
+exports.incrementArticleVote = (articleID, updateVoteBy) => {
+  const { inc_vote } = updateVoteBy;
+  const isProp = updateVoteBy.hasOwnProperty("inc_vote");
+
+  if (!isProp) {
+    return Promise.reject({
+      status: 400,
+      msg: "Please pass correct object to update votes property!",
+    });
+  }
+
+  return db
+    .query(
+      `UPDATE articles SET votes = votes + ${inc_vote} WHERE articles.article_id = ${articleID} RETURNING *`
+    )
+    .then(({ rows }) => {
+      const updatedArticle = rows[0];
+      return updatedArticle;
+    });
+};

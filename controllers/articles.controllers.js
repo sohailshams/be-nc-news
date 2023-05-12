@@ -3,6 +3,7 @@ const {
   getArticles,
   getCommentsWidArticleId,
   addComment,
+  incrementArticleVote,
 } = require("../models/articles.models");
 
 exports.fetchArticleWithId = (request, response, next) => {
@@ -37,6 +38,16 @@ exports.postComment = (request, response, next) => {
   addComment(articleId, newComment)
     .then((comment) => {
       response.status(201).send({ comment: comment });
+    })
+    .catch(next);
+};
+
+exports.updateArticle = (request, response, next) => {
+  const articleId = request.params.article_id;
+  const upateVoteBy = request.body;
+  incrementArticleVote(articleId, upateVoteBy)
+    .then((updatedArticle) => {
+      response.status(200).send({ updatedArticle: updatedArticle });
     })
     .catch(next);
 };
