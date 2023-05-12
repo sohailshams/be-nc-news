@@ -48,3 +48,30 @@ exports.getCommentsWidArticleId = (articleId) => {
       return comments;
     });
 };
+
+exports.addComment = (articleID, newComment) => {
+  const { username, body } = newComment;
+  const commentProps = ["username", "body"];
+
+  const isProps = commentProps.reduce((username, body) => {
+    return username && body in newComment;
+  }, true);
+
+  if (!isProps) {
+    return Promise.reject({
+      status: 400,
+      msg: "Please pass correct comment object!",
+    });
+  }
+
+  return db
+    .query(
+      `INSERT INTO comments (author, body, article_id) VALUES ($1, $2, $3)
+  RETURNING *`,
+      [username, body, articleID]
+    )
+    .then(({ rows }) => {
+      const comment = rows[0];
+      return comment;
+    });
+};

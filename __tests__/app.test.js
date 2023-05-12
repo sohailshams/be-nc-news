@@ -138,6 +138,39 @@ describe("GET /api/articles/:article_id/comments test suite", () => {
   });
 });
 
+describe(" POST /api/articles/:article_id/comments test suite", () => {
+  test("POST - status: 201 - returns the newly created comment", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "This is awesome articale!",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(201)
+      .then((response) => {
+        expect(response.body.comment.body).toBe("This is awesome articale!");
+        expect(response.body.comment.author).toBe("butter_bridge");
+      });
+  });
+  test("POST status: 201, returns the newly created comment if passed extra key", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "This is awesome articale!",
+      extra: "extra",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(201)
+      .then((response) => {
+        expect(response.body.comment.hasOwnProperty("extra")).toBe(false);
+        expect(response.body.comment.body).toBe("This is awesome articale!");
+        expect(response.body.comment.author).toBe("butter_bridge");
+      });
+  });
+});
+
 describe("news api error handling test suite", () => {
   test("status:404, responds with an error message when passed an endpoint that does not exist", () => {
     return request(app)
@@ -187,6 +220,18 @@ describe("news api error handling test suite", () => {
       .expect(404)
       .then((response) => {
         expect(response.body.msg).toBe("Endpoint not found!");
+      });
+  });
+  test("POST /api/articles/1/comments - status:400, responds with an error message if comment is missing required field", () => {
+    const newComment = {
+      username: "butter_bridge",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Please pass correct comment object!");
       });
   });
 });
