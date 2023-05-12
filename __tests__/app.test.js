@@ -109,6 +109,35 @@ describe("GET /api/articles - news api test suite", () => {
   });
 });
 
+describe("GET /api/articles/:article_id/comments test suite", () => {
+  test("GET - status: 200 - an array of comment objects with correct article_id", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.comments.length).toBe(11);
+        response.body.comments.forEach((comment) => {
+          expect(typeof comment.comment_id).toBe("number");
+          expect(typeof comment.votes).toBe("number");
+          expect(typeof comment.created_at).toBe("string");
+          expect(typeof comment.author).toBe("string");
+          expect(typeof comment.body).toBe("string");
+          expect(typeof comment.article_id).toBe("number");
+        });
+      });
+  });
+  test("GET - status: 200 - an array of comment objects sorted by date in descending order by default", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.comments).toBeSortedBy("created_at", {
+          descending: true,
+        });
+      });
+  });
+});
+
 describe("news api error handling test suite", () => {
   test("status:404, responds with an error message when passed an endpoint that does not exist", () => {
     return request(app)
@@ -132,6 +161,32 @@ describe("news api error handling test suite", () => {
       .expect(404)
       .then((response) => {
         expect(response.body.msg).toBe("Article ID does not exist!");
+      });
+  });
+  test("GET /api/articles/:article_id/comments - status:400, responds with an error message when passed wrong article_id", () => {
+    return request(app)
+      .get("/api/articles/notAnId/comments")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad Request");
+      });
+  });
+  test("GET /api/articles/:article_id/comments - status:404, responds with an error message if article_id does not exist", () => {
+    return request(app)
+      .get("/api/articles/55555/comments")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe(
+          "No comment found related to this 55555"
+        );
+      });
+  });
+  test("GET /api/articles/1/nonsense - status:404, responds with an error message if passed bad url", () => {
+    return request(app)
+      .get("/api/articles/1/nonsense")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Endpoint not found!");
       });
   });
 });

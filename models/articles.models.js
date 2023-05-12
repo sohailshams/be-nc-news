@@ -30,3 +30,21 @@ exports.getArticles = () => {
       return articles;
     });
 };
+
+exports.getCommentsWidArticleId = (articleId) => {
+  return db
+    .query(
+      "SELECT * FROM comments WHERE comments.article_id = $1 ORDER BY comments.created_at DESC;",
+      [articleId]
+    )
+    .then(({ rows }) => {
+      const comments = rows;
+      if (comments.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: `No comment found related to this ${articleId}`,
+        });
+      }
+      return comments;
+    });
+};
