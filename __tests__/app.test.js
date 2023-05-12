@@ -189,14 +189,6 @@ describe("news api error handling test suite", () => {
         expect(response.body.msg).toBe("Endpoint not found!");
       });
   });
-  test("GET /api/articles/5555555555/comments - status:404, responds with an error message if passed article does not exist", () => {
-    return request(app)
-      .get("/api/articles/1/nonsense")
-      .expect(404)
-      .then((response) => {
-        expect(response.body.msg).toBe("Endpoint not found!");
-      });
-  });
 });
 
 describe("JSON describing all the available endpoints on your API - test suite", () => {
