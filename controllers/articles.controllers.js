@@ -2,6 +2,7 @@ const {
   getArticleWithId,
   getArticles,
   getCommentsWidArticleId,
+  addComment,
 } = require("../models/articles.models");
 
 exports.fetchArticleWithId = (request, response, next) => {
@@ -26,6 +27,16 @@ exports.fetchCommentsWidArticleId = (request, response, next) => {
   getCommentsWidArticleId(articleId)
     .then((comments) => {
       response.status(200).send({ comments: comments });
+    })
+    .catch(next);
+};
+
+exports.postComment = (request, response, next) => {
+  const articleId = request.params.article_id;
+  const newComment = request.body;
+  addComment(articleId, newComment)
+    .then((comment) => {
+      response.status(201).send({ comment: comment });
     })
     .catch(next);
 };
