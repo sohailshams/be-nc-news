@@ -269,6 +269,36 @@ describe("news api error handling test suite", () => {
         );
       });
   });
+  test("PATCH /api/articles/nonsense - status:400, responds with an error message if passed bad url", () => {
+    const updateVoteBy = { inc_vote: 20 };
+    return request(app)
+      .patch("/api/articles/nonsense")
+      .send(updateVoteBy)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad Request");
+      });
+  });
+  test("PATCH /api/articles/10000 - status:404, responds with an error message if passed article_id does not exist", () => {
+    const updateVoteBy = { inc_vote: 20 };
+    return request(app)
+      .patch("/api/articles/10000")
+      .send(updateVoteBy)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Article ID does not exist!");
+      });
+  });
+  test("PATCH /api/articles/1 - status:400, responds with an error message if inc_vote is not a number", () => {
+    const updateVoteBy = { inc_vote: "banana" };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(updateVoteBy)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Please pass votes as a number!");
+      });
+  });
 });
 
 describe("JSON describing all the available endpoints on your API - test suite", () => {

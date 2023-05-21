@@ -87,12 +87,25 @@ exports.incrementArticleVote = (articleID, updateVoteBy) => {
     });
   }
 
+  if (typeof inc_vote !== "number") {
+    return Promise.reject({
+      status: 400,
+      msg: "Please pass votes as a number!",
+    });
+  }
+
   return db
     .query(
       `UPDATE articles SET votes = votes + ${inc_vote} WHERE articles.article_id = ${articleID} RETURNING *`
     )
     .then(({ rows }) => {
       const updatedArticle = rows[0];
+      if (!updatedArticle) {
+        return Promise.reject({
+          status: 404,
+          msg: "Article ID does not exist!",
+        });
+      }
       return updatedArticle;
     });
 };
