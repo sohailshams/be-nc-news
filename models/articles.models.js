@@ -1,3 +1,4 @@
+const { response } = require("../app.js");
 const db = require("../db/connection.js");
 
 exports.getArticleWithId = (articleId) => {
@@ -107,5 +108,20 @@ exports.incrementArticleVote = (articleID, updateVoteBy) => {
         });
       }
       return updatedArticle;
+    });
+};
+
+exports.removeComment = (commentID) => {
+  return db
+    .query(`DELETE FROM comments WHERE comments.comment_id = ${commentID};`)
+    .then((response) => {
+      if (response.rowCount === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "Comment ID does not exist!",
+        });
+      }
+      const comment = response.rows;
+      return comment;
     });
 };

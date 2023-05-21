@@ -194,6 +194,17 @@ describe(" POST /api/articles/:article_id/comments test suite", () => {
   });
 });
 
+describe("DELETE /api/comments/:comment_id test suite", () => {
+  test("DELETE - status - 204 and delete the given comment by passing correct comment_id", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then((response) => {
+        expect(response.body).toEqual({});
+      });
+  });
+});
+
 describe("news api error handling test suite", () => {
   test("status:404, responds with an error message when passed an endpoint that does not exist", () => {
     return request(app)
@@ -297,6 +308,22 @@ describe("news api error handling test suite", () => {
       .expect(400)
       .then((response) => {
         expect(response.body.msg).toBe("Please pass votes as a number!");
+      });
+  });
+  test("DELETE /api/comments/nonsense - status:400, responds with an error message if passed bad url", () => {
+    return request(app)
+      .delete("/api/comments/nonsense")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad Request");
+      });
+  });
+  test("DELETE /api/comments/10000 - status:404, responds with an error message if passed comment_id does not exist", () => {
+    return request(app)
+      .delete("/api/comments/10000")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Comment ID does not exist!");
       });
   });
 });
