@@ -4,6 +4,7 @@ const {
   getCommentsWidArticleId,
   addComment,
   incrementArticleVote,
+  removeComment,
 } = require("../models/articles.models");
 
 exports.fetchArticleWithId = (request, response, next) => {
@@ -48,6 +49,15 @@ exports.updateArticle = (request, response, next) => {
   incrementArticleVote(articleId, upateVoteBy)
     .then((updatedArticle) => {
       response.status(200).send({ updatedArticle: updatedArticle });
+    })
+    .catch(next);
+};
+
+exports.deleteComment = (request, response, next) => {
+  const commentId = request.params.comment_id;
+  removeComment(commentId)
+    .then((deletedComment) => {
+      response.status(204).send({ deletedComment: deletedComment });
     })
     .catch(next);
 };
