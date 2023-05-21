@@ -8,6 +8,7 @@ const {
   fetchArticles,
   fetchCommentsWidArticleId,
   postComment,
+  updateArticle,
 } = require("./controllers/articles.controllers");
 
 app.get("/api", fetchApiInfo);
@@ -19,6 +20,8 @@ app.get("/api/articles/:article_id/comments", fetchCommentsWidArticleId);
 
 app.post("/api/articles/:article_id/comments", postComment);
 
+app.patch("/api/articles/:article_id", updateArticle);
+
 app.use("/*", (request, response) => {
   response.status(404).send({ msg: "Endpoint not found!" });
 });
@@ -29,7 +32,7 @@ app.use((err, request, response, next) => {
     response.status(err.status).send({ msg: err.msg });
   }
   // handle specific psql errors
-  else if (err.code === "22P02") {
+  else if (err.code === "22P02" || err.code === "42703") {
     response.status(400).send({ msg: "Bad Request" });
   } else {
     // if the error hasn't been identified,
