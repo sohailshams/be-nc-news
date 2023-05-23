@@ -11,8 +11,10 @@ const {
   updateArticle,
   deleteComment,
 } = require("./controllers/articles.controllers");
+const { fetchUsers } = require("./controllers/users.controllers");
 
 app.get("/api", fetchApiInfo);
+app.get("/api/users", fetchUsers);
 app.get("/api/topics", fetchTopics);
 app.get("/api/articles", fetchArticles);
 

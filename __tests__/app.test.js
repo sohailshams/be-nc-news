@@ -7,6 +7,24 @@ const testData = require("../db/data/test-data");
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
+describe("GET /api/users - news api test suite", () => {
+  test("GET - status: 200 - returns an array of users objects with username, name and avatar_url properties ", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((response) => {
+        response.body.users.forEach((user) => {
+          expect(user.hasOwnProperty("username")).toBe(true);
+          expect(user.hasOwnProperty("name")).toBe(true);
+          expect(user.hasOwnProperty("avatar_url")).toBe(true);
+          expect(typeof user.username).toBe("string");
+          expect(typeof user.name).toBe("string");
+          expect(typeof user.avatar_url).toBe("string");
+        });
+      });
+  });
+});
+
 describe("news api test suite", () => {
   test("GET - /api/topics returns 200 - topics object", () => {
     return request(app)
@@ -209,6 +227,14 @@ describe("news api error handling test suite", () => {
   test("status:404, responds with an error message when passed an endpoint that does not exist", () => {
     return request(app)
       .get("/api/notaroute")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Endpoint not found!");
+      });
+  });
+  test("status:404, responds with an error message when passed bad url", () => {
+    return request(app)
+      .get("/api/55555555555")
       .expect(404)
       .then((response) => {
         expect(response.body.msg).toBe("Endpoint not found!");
