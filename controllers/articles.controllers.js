@@ -17,7 +17,11 @@ exports.fetchArticleWithId = (request, response, next) => {
 };
 
 exports.fetchArticles = (request, response, next) => {
-  getArticles()
+  const sortBy = request.query.sort_by;
+  console.log('inside controller', sortBy);
+  const orderBy = request.query.order;
+
+  getArticles(sortBy, orderBy)
     .then((articles) => {
       response.status(200).send({ articles: articles });
     })

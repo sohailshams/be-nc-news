@@ -16,7 +16,17 @@ exports.getArticleWithId = (articleId) => {
     });
 };
 
-exports.getArticles = () => {
+exports.getArticles = (sortBy = "created_at", orderBy = "DESC") => {
+  console.log("inside model", sortBy);
+  const validOrderString = ["ASC", "DESC"];
+  const validSortByString = ["title", "topic", 'author', 'votes', 'article_img_url'];
+  if (!validOrderString.includes(orderBy.toUpperCase())) {
+    return Promise.reject({ status: 400, msg: "Bad Request" });
+  }
+  if (!validSortByString.includes(sortBy)) {
+    return Promise.reject({ status: 400, msg: "Bad Request" });
+  }
+
   return db
     .query(
       `SELECT 
@@ -24,7 +34,7 @@ exports.getArticles = () => {
        COUNT(comments.article_id) ::INT AS "comment_count" 
         FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id
         GROUP BY articles.article_id
-        ORDER BY articles.created_at DESC;`
+        ORDER BY articles.${sortBy} ${orderBy};`
     )
     .then(({ rows }) => {
       const articles = rows;
