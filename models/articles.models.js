@@ -17,9 +17,15 @@ exports.getArticleWithId = (articleId) => {
 };
 
 exports.getArticles = (sortBy = "created_at", orderBy = "DESC") => {
-  console.log("inside model", sortBy);
   const validOrderString = ["ASC", "DESC"];
-  const validSortByString = ["title", "topic", 'author', 'votes', 'article_img_url'];
+  const validSortByString = [
+    "title",
+    "topic",
+    "author",
+    "votes",
+    "created_at",
+    "article_img_url",
+  ];
   if (!validOrderString.includes(orderBy.toUpperCase())) {
     return Promise.reject({ status: 400, msg: "Bad Request" });
   }
