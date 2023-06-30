@@ -17,11 +17,14 @@ exports.fetchArticleWithId = (request, response, next) => {
 };
 
 exports.fetchArticles = (request, response, next) => {
-  getArticles()
+  const sortBy = request.query.sort_by;
+  const orderBy = request.query.order;
+  const topic = request.query.topic;
+  getArticles(sortBy, orderBy, topic)
     .then((articles) => {
       response.status(200).send({ articles: articles });
     })
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 exports.fetchCommentsWidArticleId = (request, response, next) => {

@@ -25,7 +25,7 @@ describe("GET /api/users - news api test suite", () => {
   });
 });
 
-describe("news api test suite", () => {
+describe("GET /api/topics - news api test suite", () => {
   test("GET - /api/topics returns 200 - topics object", () => {
     return request(app)
       .get("/api/topics")
@@ -55,7 +55,7 @@ describe("news api test suite", () => {
   });
 });
 
-describe("GET /api/articles/:article_id test suite", () => {
+describe("GET /api/articles/:article_id - news api test suite", () => {
   test("returns an article object", () => {
     const expectedResult = {
       article_id: 1,
@@ -115,6 +115,134 @@ describe("GET /api/articles - news api test suite", () => {
         });
       });
   });
+  test("GET - status: 200 - an array of article objects sorted by date in ascending order", () => {
+    return request(app)
+      .get("/api/articles?order=asc")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles).toBeSortedBy("created_at", {
+          ascending: true,
+        });
+      });
+  });
+  test("GET - status: 200 - an array of article objects sorted by title in descending order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=title")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles).toBeSortedBy("title", {
+          descending: true,
+        });
+      });
+  });
+  test("GET - status: 200 - an array of article objects sorted by title in ascending order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=title&order=asc")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles).toBeSortedBy("title", {
+          ascending: true,
+        });
+      });
+  });
+  test("GET - status: 200 - an array of article objects sorted by topic in descending order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=topic")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles).toBeSortedBy("topic", {
+          descending: true,
+        });
+      });
+  });
+  test("GET - status: 200 - an array of article objects sorted by topic in ascending order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=topic&order=asc")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles).toBeSortedBy("topic", {
+          ascending: true,
+        });
+      });
+  });
+  test("GET - status: 200 - an array of article objects sorted by author in descending order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=author")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles).toBeSortedBy("author", {
+          descending: true,
+        });
+      });
+  });
+  test("GET - status: 200 - an array of article objects sorted by author in ascending order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=author&order=asc")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles).toBeSortedBy("author", {
+          ascending: true,
+        });
+      });
+  });
+  test("GET - status: 200 - an array of article objects sorted by votes in descending order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles).toBeSortedBy("votes", {
+          descending: true,
+        });
+      });
+  });
+  test("GET - status: 200 - an array of article objects sorted by votes in ascending order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes&order=asc")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles).toBeSortedBy("votes", {
+          ascending: true,
+        });
+      });
+  });
+  test("GET - status: 200 - an array of article objects sorted by article_img_url in descending order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=article_img_url")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles).toBeSortedBy("article_img_url", {
+          descending: true,
+        });
+      });
+  });
+  test("GET - status: 200 - an array of article objects sorted by article_img_url in ascending order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=article_img_url&order=asc")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles).toBeSortedBy("article_img_url", {
+          ascending: true,
+        });
+      });
+  });
+  test("GET - status: 200 - an array of article objects filtered by topic specified in query", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .then((response) => {
+        response.body.articles.forEach((article) => {
+          expect(article.topic).toBe("mitch");
+        });
+      });
+  });
+  test("GET - status: 200 - an array of article objects filtered by topic specified in quer", () => {
+    return request(app)
+      .get("/api/articles?topic=cats")
+      .then((response) => {
+        response.body.articles.forEach((article) => {
+          expect(article.topic).toBe("cats");
+        });
+      });
+  });
   test("GET - status: 200 - does not return 'body' property on article object", () => {
     return request(app)
       .get("/api/articles")
@@ -150,7 +278,7 @@ describe("PATCH /api/articles/:article_id - news api test suite", () => {
   });
 });
 
-describe("GET /api/articles/:article_id/comments test suite", () => {
+describe("GET /api/articles/:article_id/comments - news api test suite", () => {
   test("GET - status: 200 - an array of comment objects with correct article_id", () => {
     return request(app)
       .get("/api/articles/1/comments")
@@ -179,7 +307,7 @@ describe("GET /api/articles/:article_id/comments test suite", () => {
   });
 });
 
-describe(" POST /api/articles/:article_id/comments test suite", () => {
+describe(" POST /api/articles/:article_id/comments - news api test suite", () => {
   test("POST - status: 201 - returns the newly created comment", () => {
     const newComment = {
       username: "butter_bridge",
@@ -212,7 +340,7 @@ describe(" POST /api/articles/:article_id/comments test suite", () => {
   });
 });
 
-describe("DELETE /api/comments/:comment_id test suite", () => {
+describe("DELETE /api/comments/:comment_id - news api test suite", () => {
   test("DELETE - status - 204 and delete the given comment by passing correct comment_id", () => {
     return request(app)
       .delete("/api/comments/1")
@@ -232,12 +360,44 @@ describe("news api error handling test suite", () => {
         expect(response.body.msg).toBe("Endpoint not found!");
       });
   });
-  test("status:404, responds with an error message when passed bad url", () => {
+  test("GET /api/articles - status:404, responds with an error message when passed bad url", () => {
     return request(app)
       .get("/api/55555555555")
       .expect(404)
       .then((response) => {
         expect(response.body.msg).toBe("Endpoint not found!");
+      });
+  });
+  test("GET /api/articles - status:400 responds with an error message when passed incorrect order string", () => {
+    return request(app)
+      .get("/api/articles?order=nonsense")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad Request");
+      });
+  });
+  test("GET - /api/articles - status:400 responds with error message when passed incorrect query stirng", () => {
+    return request(app)
+      .get("/api/articles?sort_by=nonsense")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad Request");
+      });
+  });
+  test("GET - /api/articles - status:400 responds with error message when passed incorrect topic query stirng", () => {
+    return request(app)
+      .get("/api/articles?topic=nonsense")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad Request");
+      });
+  });
+  test("GET - /api/articles - status:400 responds with error message when passed incorrect topic query stirng", () => {
+    return request(app)
+      .get("/api/articles?topic=123")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad Request");
       });
   });
   test("GET /api/articles/:article_id - status:400, responds with an error message when passed wrong article_id", () => {
