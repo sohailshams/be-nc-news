@@ -3,7 +3,14 @@ const db = require("../db/connection.js");
 
 exports.getArticleWithId = (articleId) => {
   return db
-    .query("SELECT * FROM articles WHERE article_id = $1;", [articleId])
+    .query(
+      `SELECT articles.article_id, articles.title, articles.votes, articles.topic, articles.author, articles.created_at, articles.article_img_url, articles.body,
+  COUNT(comments.article_id) ::INT AS "comment_count"  
+  FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id
+  WHERE articles.article_id = $1
+  GROUP BY articles.article_id;`,
+      [articleId]
+    )
     .then(({ rows }) => {
       const article = rows[0];
       if (!article) {
