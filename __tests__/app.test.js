@@ -225,6 +225,24 @@ describe("GET /api/articles - news api test suite", () => {
         });
       });
   });
+  test("GET - status: 200 - an array of article objects filtered by topic specified in query", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .then((response) => {
+        response.body.articles.forEach((article) => {
+          expect(article.topic).toBe("mitch");
+        });
+      });
+  });
+  test("GET - status: 200 - an array of article objects filtered by topic specified in quer", () => {
+    return request(app)
+      .get("/api/articles?topic=cats")
+      .then((response) => {
+        response.body.articles.forEach((article) => {
+          expect(article.topic).toBe("cats");
+        });
+      });
+  });
   test("GET - status: 200 - does not return 'body' property on article object", () => {
     return request(app)
       .get("/api/articles")
@@ -350,7 +368,7 @@ describe("news api error handling test suite", () => {
         expect(response.body.msg).toBe("Endpoint not found!");
       });
   });
-  test("GET /api/articles - status:404 responds with an error message when passed incorrect order string", () => {
+  test("GET /api/articles - status:400 responds with an error message when passed incorrect order string", () => {
     return request(app)
       .get("/api/articles?order=nonsense")
       .expect(400)
@@ -361,6 +379,22 @@ describe("news api error handling test suite", () => {
   test("GET - /api/articles - status:400 responds with error message when passed incorrect query stirng", () => {
     return request(app)
       .get("/api/articles?sort_by=nonsense")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad Request");
+      });
+  });
+  test("GET - /api/articles - status:400 responds with error message when passed incorrect topic query stirng", () => {
+    return request(app)
+      .get("/api/articles?topic=nonsense")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad Request");
+      });
+  });
+  test("GET - /api/articles - status:400 responds with error message when passed incorrect topic query stirng", () => {
+    return request(app)
+      .get("/api/articles?topic=123")
       .expect(400)
       .then((response) => {
         expect(response.body.msg).toBe("Bad Request");

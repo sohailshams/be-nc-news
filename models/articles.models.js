@@ -16,7 +16,14 @@ exports.getArticleWithId = (articleId) => {
     });
 };
 
-exports.getArticles = (sortBy = "created_at", orderBy = "DESC") => {
+exports.getArticles = async (
+  sortBy = "created_at",
+  orderBy = "DESC",
+  topic = ""
+) => {
+  const topicsArray = [];
+  const queryValues = [];
+
   const validOrderString = ["ASC", "DESC"];
   const validSortByString = [
     "title",
@@ -26,6 +33,18 @@ exports.getArticles = (sortBy = "created_at", orderBy = "DESC") => {
     "created_at",
     "article_img_url",
   ];
+
+  if (topic) {
+    await db.query(`SELECT topic FROM articles;`).then(({ rows }) => {
+      rows.forEach((topicObj) => {
+        topicsArray.push(topicObj.topic);
+      });
+      if (!topicsArray.includes(topic)) {
+        return Promise.reject({ status: 400, msg: "Bad Request" });
+      }
+    });
+  }
+
   if (!validOrderString.includes(orderBy.toUpperCase())) {
     return Promise.reject({ status: 400, msg: "Bad Request" });
   }
@@ -33,19 +52,23 @@ exports.getArticles = (sortBy = "created_at", orderBy = "DESC") => {
     return Promise.reject({ status: 400, msg: "Bad Request" });
   }
 
-  return db
-    .query(
-      `SELECT 
-       articles.article_id, articles.title, articles.votes, articles.topic, articles.author, articles.created_at, articles.article_img_url, 
-       COUNT(comments.article_id) ::INT AS "comment_count" 
-        FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id
-        GROUP BY articles.article_id
-        ORDER BY articles.${sortBy} ${orderBy};`
-    )
-    .then(({ rows }) => {
-      const articles = rows;
-      return articles;
-    });
+  let queryStr = `SELECT 
+articles.article_id, articles.title, articles.votes, articles.topic, articles.author, articles.created_at, articles.article_img_url, 
+COUNT(comments.article_id) ::INT AS "comment_count" 
+FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id`;
+
+  if (topic) {
+    queryStr += ` WHERE articles.topic = $1`;
+    queryValues.push(topic);
+  }
+
+  queryStr += ` GROUP BY articles.article_id
+  ORDER BY articles.${sortBy} ${orderBy};`;
+
+  return db.query(queryStr, queryValues).then(({ rows }) => {
+    const articles = rows;
+    return articles;
+  });
 };
 
 exports.getCommentsWidArticleId = (articleId) => {
