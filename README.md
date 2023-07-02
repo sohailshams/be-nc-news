@@ -47,3 +47,11 @@ There are two databases included with this project, test database and developemt
 
 - **npm run setup-dbs**
 - **npm run seed**
+
+### Credits
+
+This project is part of [Northcoders](https://northcoders.com/) Software Development Bootcamp.
+
+### Disclaimer
+
+This project is for educational purposes only.
