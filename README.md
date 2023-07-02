@@ -1,5 +1,8 @@
 # News API Backend
 
+- [Endpoints Deployed Link](https://nc-news-fnpf.onrender.com/api)
+- [GitHub Repo](https://github.com/sohailshams/be-nc-news)
+
 ## Project Description
 
 This project **(API's)** are build for the purpose of accessing application data programmatically. This backend provides following information to the front end architecture;
