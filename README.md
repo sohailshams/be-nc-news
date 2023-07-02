@@ -1,6 +1,6 @@
 # News API Backend
 
-- [Endpoints Deployed Link](https://nc-news-fnpf.onrender.com/api)
+- [Live Endpoints Link](https://nc-news-fnpf.onrender.com/api)
 - [GitHub Repo](https://github.com/sohailshams/be-nc-news)
 
 ## Project Description
@@ -15,6 +15,19 @@ This project **(API's)** are build for the purpose of accessing application data
 6. Ability to post comment on an article
 7. Ability to update an article by voting up or down
 8. Ability to delete a comment
+
+## Technologies Used
+
+- [Node JS](https://nodejs.org/en)
+- [Express JS](https://expressjs.com/) used to setup server.
+- [dotenv](https://www.npmjs.com/package/dotenv) used to load environment variables from a .env into process.env.
+- [PostgreSQL](https://www.postgresql.org/) used in development.
+- [ElephantSQL](https://www.elephantsql.com/) used in production.
+- [PostgreSQL Format](https://www.npmjs.com/package/pg-format) used to safely create dynamic SQL queries.
+- [Jest](https://jestjs.io/) - [SuperTest](https://www.npmjs.com/package/supertest) and [Jest Sorted](https://www.npmjs.com/package/jest-sorted) are used for writing tests.
+- [GitHub](https://github.com/) used for version control.
+- [Render](https://www.render.com/) used as hosting platform to deploy this project endpoints.
+- [VS Code](https://code.visualstudio.com/) used as code editor.
 
 ## Local Deployment
 
