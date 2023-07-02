@@ -31,8 +31,19 @@ This project **(API's)** are build for the purpose of accessing application data
 
 ## Local Deployment
 
-To run this project locally one has to create environment variables as below;
+To run this project locally, first fork this [repo](https://github.com/sohailshams/be-nc-news) and clone to your local machine.
+
+### Environment Variables
+
+Next, create environment variables as below;
 
 - Create **.env.test** file and add **PGDATABASE=nc_news_test** in it.
 - Create **.env.development** file and add **PGDATABASE=nc_news** in it.
-- Now run **npm install**.
+- Now run **npm install**
+
+### Seed Databases
+
+There are two databases included with this project, test database and developemt database. Please run following commands to seed databases;
+
+- **npm run setup-dbs**
+- **npm run seed**
